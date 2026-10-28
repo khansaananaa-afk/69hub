@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>69HUB – Video sharing demo</title>
+<meta name="description" content="69HUB is a static demo of a video-sharing site.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23FFC107'/%3E%3Ctext x='16' y='22' font-size='16' font-weight='900' text-anchor='middle' font-family='Arial'%3E69%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">☰</button>
+  <a class="logo" href="#home" aria-label="69HUB home"><span class="l69">69</span><span class="lhub">HUB</span></a>
+  <form class="search" id="searchForm" role="search">
+    <input id="searchInput" type="search" placeholder="Search videos by title" aria-label="Search videos by title">
+    <button type="submit" aria-label="Search">Search</button>
+  </form>
+  <nav class="nav" id="nav" aria-label="Main">
+    <a href="#home" data-route="home">Home</a>
+    <a href="#creator" data-route="creator">Creator</a>
+    <a href="#admin" data-route="admin">Admin</a>
+  </nav>
+</header>
+
+<main id="main">
+  <!-- HOME -->
+  <section class="view" id="view-home">
+    <div class="cats" id="cats" role="tablist" aria-label="Categories"></div>
+    <div id="featuredWrap">
+      <h2>Featured</h2><div class="grid" id="featured"></div>
+      <h2>Trending</h2><div class="grid" id="trending"></div>
+    </div>
+    <div class="bar">
+      <h2 id="listTitle">Recently uploaded</h2>
+      <div class="controls">
+        <label>Sort <select id="sort"><option value="new">Newest</option><option value="views">Most viewed</option></select></label>
+        <button class="btn ghost" id="clear">Clear filters</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <h3>No videos match your filters</h3>
+      <p>Try a different title or category, or clear the filters.</p>
+      <button class="btn" id="emptyClear">Clear filters</button>
+    </div>
+    <div class="center"><button class="btn" id="more">Load more</button></div>
+  </section>
+
+  <!-- PLAYER -->
+  <section class="view" id="view-watch" hidden>
+    <a href="#home" class="back">← Back to videos</a>
+    <div class="player" id="player">
+      <video id="video" preload="metadata" playsinline></video>
+      <div class="perr" id="perr" hidden>This video could not be loaded. Check your connection or try another video.</div>
+      <div class="pbar">
+        <button class="icon-btn" id="pp" aria-label="Play">▶</button>
+        <input type="range" id="seek" min="0" max="100" step="0.1" value="0" aria-label="Seek">
+        <span id="time">0:00 / 0:00</span>
+        <button class="icon-btn" id="mute" aria-label="Mute">🔊</button>
+        <input type="range" id="vol" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+        <select id="speed" aria-label="Playback speed"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select>
+        <button class="icon-btn" id="fs" aria-label="Full screen">⛶</button>
+      </div>
+    </div>
+    <h1 id="wTitle"></h1>
+    <p class="meta" id="wMeta"></p>
+    <p id="wDesc"></p>
+    <button class="btn ghost" id="reportBtn">Report this video</button>
+  </section>
+
+  <!-- CREATOR -->
+  <section class="view" id="view-creator" hidden>
+    <div class="note">Demo only. Nothing is uploaded, saved, or synced. Real accounts, uploads and moderation need a backend (see README notes).</div>
+    <div class="profile"><div class="avatar">NS</div><div><h1>Nova Studio</h1><p class="meta">Demo creator profile · joined 2024</p></div></div>
+    <div class="two">
+      <div>
+        <h2>Your videos</h2>
+        <div class="tablewrap"><table><thead><tr><th>Title</th><th>Status</th></tr></thead><tbody id="myVideos"></tbody></table></div>
+      </div>
+      <form id="uploadForm">
+        <h2>Upload a video</h2>
+        <label>Title<input name="title" required maxlength="80"></label>
+        <label>Description<textarea name="desc" rows="3" maxlength="500"></textarea></label>
+        <label>Category<select name="cat" id="upCat"></select></label>
+        <label>Video file<input type="file" name="file" accept="video/*" id="upFile"></label>
+        <fieldset><legend>Thumbnail</legend><div class="thumbs" id="thumbPick"></div></fieldset>
+        <label class="check"><input type="checkbox" required> I own this video and agree to the Terms of Service.</label>
+        <progress id="upProg" value="0" max="100" hidden></progress>
+        <p class="status" id="upStatus" role="status"></p>
+        <button class="btn" type="submit">Submit for review</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section class="view" id="view-admin" hidden>
+    <div class="note warn">Interface design only. These controls have no authentication and provide no real security or authorization. Real moderation must run on a server with secure admin login.</div>
+    <h1>Moderation</h1>
+    <div class="two">
+      <div><h2>Review queue</h2><div id="queue"></div></div>
+      <div><h2>User reports</h2><div id="reports"></div></div>
+    </div>
+    <h2>Categories</h2>
+    <form class="inline" id="catForm"><input id="newCat" placeholder="New category name" required maxlength="24"><button class="btn" type="submit">Add category</button></form>
+    <div class="chips" id="catList"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="logo small"><span class="l69">69</span><span class="lhub">HUB</span></div>
+  <nav aria-label="Footer">
+    <a href="#" data-doc="about">About</a><a href="#" data-doc="contact">Contact</a>
+    <a href="#" data-doc="privacy">Privacy Policy</a><a href="#" data-doc="terms">Terms of Service</a>
+    <a href="#" data-doc="removal">Request content removal</a>
+  </nav>
+  <p class="meta">Static demo. Sample videos © Blender Foundation, used under Creative Commons.</p>
+</footer>
+
+<dialog id="dlg"><form method="dialog"><div id="dlgBody"></div><button class="btn ghost" value="close">Close</button></form></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="script.js"></script>
+</body>
+</html>
